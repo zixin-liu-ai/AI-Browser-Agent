@@ -1,284 +1,159 @@
-\# 🤖 AI-Browser-Agent
+---
 
-
+# 🤖 AI-Browser-Agent
 
 ✨ A browser automation data collection and analysis project built with Playwright and Python.
 
+---
 
-
-\---
-
-
-
-\## 🚀 Project Overview
-
-
+## 🚀 Project Overview
 
 This project uses Playwright to automate browser interactions, crawl paginated quote data from a website, extract structured fields, and generate analysis reports.
 
+### 🔥 Currently implemented features:
 
+* 🌐 Automated browser control with Playwright
+* 📄 Multi-page crawling
+* 🧩 Structured quote extraction
+* 💾 JSON data persistence
+* 📊 Author/tag frequency analysis
+* 🧱 Modular project structure
 
-\### 🔥 Currently implemented features:
+---
 
+## 🛠️ Tech Stack
 
+* 🐍 Python
+* 🎭 Playwright
+* 📦 JSON
+* 🔢 collections.Counter
 
-\* 🌐 Automated browser control with Playwright
+---
 
-\* 📄 Multi-page crawling
+## 📂 Project Structure
 
-\* 🧩 Structured quote extraction
-
-\* 💾 JSON data persistence
-
-\* 📊 Author/tag frequency analysis
-
-\* 🧱 Modular project structure
-
-
-
-\---
-
-
-
-\## 🛠️ Tech Stack
-
-
-
-\* 🐍 Python
-
-\* 🎭 Playwright
-
-\* 📦 JSON
-
-\* 🔢 collections.Counter
-
-
-
-\---
-
-
-
-\## 📂 Project Structure
-
-
-
+```
 AI-Browser-Agent/
-
 ├── app/
-
 │   ├── crawler/
-
-│   │   └── quotes\_spider.py
-
+│   │   └── quotes_spider.py
 │   ├── analyzer/
-
-│   │   └── quotes\_analyzer.py
-
+│   │   └── quotes_analyzer.py
 │   └── main.py
-
 ├── data/
-
-│   ├── quotes\_all.json
-
-│   └── analysis\_report.json
-
+│   ├── quotes_all.json
+│   └── analysis_report.json
 ├── README.md
-
 └── requirements.txt
+```
 
+---
 
+## ⚙️ Features
 
-\---
-
-
-
-\## ⚙️ Features
-
-
-
-\### 1️⃣ Browser Automation 🌐
-
-
+### 1️⃣ Browser Automation 🌐
 
 The project launches a browser automatically and navigates through multiple pages.
 
-
-
-\### 2️⃣ Data Crawling 📥
-
-
+### 2️⃣ Data Crawling 📥
 
 It extracts the following fields for each quote:
 
+* 📄 page
+* 💬 text
+* 👤 author
+* 🏷️ tags
 
+### 3️⃣ Data Storage 💾
 
-\* 📄 page
+The crawled data is saved into `data/quotes_all.json`.
 
-\* 💬 text
-
-\* 👤 author
-
-\* 🏷️ tags
-
-
-
-\### 3️⃣ Data Storage 💾
-
-
-
-The crawled data is saved into `data/quotes\_all.json`.
-
-
-
-\### 4️⃣ Data Analysis 📊
-
-
+### 4️⃣ Data Analysis 📊
 
 The analysis module generates:
 
+* 🔢 total number of quotes
+* 🏆 top 10 authors
+* 🏷️ top 10 tags
+* 📑 quote count per page
 
+The result is saved into `data/analysis_report.json`.
 
-\* 🔢 total number of quotes
+---
 
-\* 🏆 top 10 authors
+## 📌 Sample Output
 
-\* 🏷️ top 10 tags
+### 💬 Quote Data Example
 
-\* 📑 quote count per page
-
-
-
-The result is saved into `data/analysis\_report.json`.
-
-
-
-\---
-
-
-
-\## 📌 Sample Output
-
-
-
-\### 💬 Quote Data Example
-
-
-
+```json
 {
-
-"page": 1,
-
-"text": "“The world as we have created it is a process of our thinking. It cannot be changed without changing our thinking.”",
-
-"author": "Albert Einstein",
-
-"tags": \["change", "deep-thoughts", "thinking", "world"]
-
+  "page": 1,
+  "text": "“The world as we have created it is a process of our thinking. It cannot be changed without changing our thinking.”",
+  "author": "Albert Einstein",
+  "tags": ["change", "deep-thoughts", "thinking", "world"]
 }
+```
 
+### 📊 Analysis Report Example
 
-
-\### 📊 Analysis Report Example
-
-
-
+```json
 {
-
-"total\_quotes": 100,
-
-"top\_10\_authors": \[
-
-\["Albert Einstein", 10],
-
-\["J.K. Rowling", 9]
-
-],
-
-"top\_10\_tags": \[
-
-\["love", 14],
-
-\["inspirational", 13]
-
-]
-
+  "total_quotes": 100,
+  "top_10_authors": [
+    ["Albert Einstein", 10],
+    ["J.K. Rowling", 9]
+  ],
+  "top_10_tags": [
+    ["love", 14],
+    ["inspirational", 13]
+  ]
 }
+```
 
+---
 
+## ▶️ How to Run
 
-\---
+### 1️⃣ Create virtual environment 🧪
 
-
-
-\## ▶️ How to Run
-
-
-
-\### 1️⃣ Create virtual environment 🧪
-
-
-
+```
 python -m venv venv
+```
 
+### 2️⃣ Activate virtual environment ⚡
 
+```
+venv\Scripts\activate
+```
 
-\### 2️⃣ Activate virtual environment ⚡
+### 3️⃣ Install dependencies 📦
 
-
-
-venv\\Scripts\\activate
-
-
-
-\### 3️⃣ Install dependencies 📦
-
-
-
-pip install playwright
-
+```
+pip install -r requirements.txt
 playwright install
+```
 
+### 4️⃣ Run the project 🚀
 
-
-\### 4️⃣ Run the project 🚀
-
-
-
+```
 python app/main.py
+```
 
+---
 
+## 🔮 Future Improvements
 
-\---
+* 🗄️ Add database storage with PostgreSQL
+* 🤖 Add LLM-based text classification and summarization
+* 🌍 Support more websites
+* 🛡️ Add anti-bot / login handling
+* 🐳 Containerize with Docker
+* ⚡ Build API service with FastAPI
 
+---
 
-
-\## 🔮 Future Improvements
-
-
-
-\* 🗄️ Add database storage with PostgreSQL
-
-\* 🤖 Add LLM-based text classification and summarization
-
-\* 🌍 Support more websites
-
-\* 🛡️ Add anti-bot / login handling
-
-\* 🐳 Containerize with Docker
-
-\* ⚡ Build API service with FastAPI
-
-
-
-\---
-
-
-
-\## 👩‍💻 Author
-
-
+## 👩‍💻 Author
 
 Catherine 💅
 
-
-
+---
