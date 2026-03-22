@@ -1,4 +1,3 @@
-````md
 # 🤖 AI-Browser-Agent
 
 ✨ A browser automation data collection and AI-powered analysis system built with Playwright, FastAPI, and Streamlit.
@@ -87,7 +86,7 @@ AI-Browser-Agent/
 │   └── llm_report.txt
 ├── README.md
 └── requirements.txt
-````
+```
 
 ---
 
@@ -149,7 +148,7 @@ streamlit run ui/dashboard.py
 ## 📊 API Endpoints
 
 | Endpoint    | Description          |
-| ----------- | -------------------- |
+|-------------|----------------------|
 | `/quotes`   | Get all quotes       |
 | `/analysis` | Get analysis results |
 
@@ -190,18 +189,15 @@ streamlit run ui/dashboard.py
 
 ## 🔮 Future Improvements
 
-* 🧠 Enhance LLM-based insights
-* 🗄️ Add PostgreSQL storage
-* 🌍 Support multiple websites
-* 🛡️ Add login / anti-bot handling
-* 🐳 Docker deployment
-* ⚡ FastAPI → production-ready service
+- 🧠 Enhance LLM-based insights
+- 🗄️ Add PostgreSQL storage
+- 🌍 Support multiple websites
+- 🛡️ Add login / anti-bot handling
+- 🐳 Docker deployment
+- ⚡ FastAPI → production-ready service
 
 ---
 
 ## 👩‍💻 Author
 
 Catherine 💅
-
-```
-```
