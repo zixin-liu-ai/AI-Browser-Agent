@@ -131,7 +131,6 @@ AI-Browser-Agent/
 ├── requirements.txt
 ├── docker-compose.yml
 └── README.md
-
 ---
 
 ## ▶️ Getting Started
@@ -186,13 +185,13 @@ streamlit run ui/dashboard.py
 ### 💬 Quote (Enriched)
 
 {
-"page": 1,
-"author": "Albert Einstein",
-"text": "The world as we have created it is a process of our thinking.",
-"tags": ["thinking", "world"],
-"ai_theme": "deep-thoughts",
-"sentiment": "neutral",
-"tone": "philosophical"
+  "page": 1,
+  "author": "Albert Einstein",
+  "text": "The world as we have created it is a process of our thinking.",
+  "tags": ["thinking", "world"],
+  "ai_theme": "deep-thoughts",
+  "sentiment": "neutral",
+  "tone": "philosophical"
 }
 
 ---
@@ -200,14 +199,14 @@ streamlit run ui/dashboard.py
 ### 📈 Analysis
 
 {
-"total_quotes": 100,
-"top_10_authors": [["Albert Einstein", 10]],
-"top_10_tags": [["love", 14]],
-"sentiment_distribution": {
-"positive": 50,
-"neutral": 43,
-"negative": 7
-}
+  "total_quotes": 100,
+  "top_10_authors": [["Albert Einstein", 10]],
+  "top_10_tags": [["love", 14]],
+  "sentiment_distribution": {
+    "positive": 50,
+    "neutral": 43,
+    "negative": 7
+  }
 }
 
 ---
