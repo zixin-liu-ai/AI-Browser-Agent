@@ -1,30 +1,102 @@
-from openai import OpenAI
+from typing import Dict, List, Optional
 
-client = OpenAI()
 
-def analyze_quotes_with_llm(quotes):
-    try:
-        sample_texts = [q["text"] for q in quotes[:10]]
+POSITIVE_TAGS = {
+    "inspirational", "hope", "love", "happiness", "success", "courage",
+    "friendship", "life", "learning", "wisdom", "peace", "value"
+}
 
-        prompt = f"""
-        Analyze the following quotes and summarize:
-        1. Main themes
-        2. Emotional tone
-        3. Key insights
+NEGATIVE_TAGS = {
+    "death", "fear", "heartbreak", "lies", "alcohol", "pain", "regrets",
+    "indifference", "hate", "troubles"
+}
 
-        Quotes:
-        {sample_texts}
-        """
 
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {"role": "user", "content": prompt}
-            ]
-        )
+def infer_theme(tags: List[str], quote: str) -> str:
+    if tags:
+        return ", ".join(tags[:2])
 
-        return response.choices[0].message.content
+    q = quote.lower()
+    if "love" in q:
+        return "love"
+    if "life" in q:
+        return "life"
+    if "book" in q or "read" in q:
+        return "reading"
+    if "death" in q:
+        return "death"
+    if "friend" in q:
+        return "friendship"
+    return "general reflection"
 
-    except Exception as e:
-        print("⚠️ LLM调用失败，使用本地分析 fallback")
-        return "LLM analysis unavailable (quota exceeded)."
+
+def infer_sentiment(tags: List[str], quote: str) -> str:
+    tag_set = {t.lower() for t in tags}
+
+    if tag_set & POSITIVE_TAGS:
+        return "positive"
+    if tag_set & NEGATIVE_TAGS:
+        return "negative"
+
+    q = quote.lower()
+    if any(word in q for word in ["love", "hope", "happy", "smile", "courage"]):
+        return "positive"
+    if any(word in q for word in ["death", "fear", "pain", "hate", "hurt"]):
+        return "negative"
+    return "neutral"
+
+
+def infer_tone(tags: List[str], quote: str) -> str:
+    tag_set = {t.lower() for t in tags}
+    q = quote.lower()
+
+    if "humor" in tag_set or "funny" in q:
+        return "humorous"
+    if "inspirational" in tag_set:
+        return "inspirational"
+    if "philosophy" in tag_set or "thinking" in tag_set:
+        return "philosophical"
+    if "love" in tag_set:
+        return "romantic"
+    if "death" in tag_set:
+        return "serious"
+    return "reflective"
+
+
+def infer_summary(quote: str, author: str, theme: str) -> str:
+    short_quote = quote.strip().replace("\n", " ")
+    if len(short_quote) > 90:
+        short_quote = short_quote[:90] + "..."
+    return f'A quote by {author or "Unknown"} about {theme}: {short_quote}'
+
+
+def analyze_quote_with_llm(
+    quote: str,
+    author: str = "",
+    tags: Optional[List[str]] = None
+) -> Dict:
+    if tags is None:
+        tags = []
+
+    quote = quote.strip()
+    author = author.strip()
+
+    if not quote:
+        return {
+            "ai_theme": "unknown",
+            "ai_sentiment": "neutral",
+            "ai_tone": "unknown",
+            "ai_summary": "No summary available."
+        }
+
+    theme = infer_theme(tags, quote)
+    sentiment = infer_sentiment(tags, quote)
+    tone = infer_tone(tags, quote)
+    summary = infer_summary(quote, author, theme)
+
+    return {
+        "ai_theme": theme,
+        "ai_sentiment": sentiment,
+        "ai_tone": tone,
+        "ai_summary": summary
+    }

@@ -36,20 +36,33 @@ def get_top_tag(report: dict) -> str:
     return f"{tags[0][0]} ({tags[0][1]})"
 
 
+def get_top_ai_theme(report: dict) -> str:
+    themes = report.get("top_10_ai_themes", [])
+    if not themes:
+        return "N/A"
+    return f"{themes[0][0]} ({themes[0][1]})"
+
+
 def build_quotes_dataframe(quotes_data: list[dict]) -> pd.DataFrame:
     df = pd.DataFrame(quotes_data)
+
     if "tags" in df.columns:
         df["tags_display"] = df["tags"].apply(
             lambda x: ", ".join(x) if isinstance(x, list) else ""
         )
     else:
         df["tags_display"] = ""
+
+    for col in ["ai_theme", "ai_sentiment", "ai_tone", "ai_summary"]:
+        if col not in df.columns:
+            df[col] = ""
+
     return df
 
 
 def main():
     st.title("🤖 AI Browser Agent Dashboard")
-    st.caption("Browser automation + structured crawling + statistical analysis + AI insight")
+    st.caption("Browser automation + structured crawling + AI-enhanced analysis")
 
     quotes_data = fetch_data("/quotes")
     report_data = fetch_data("/analysis")
@@ -64,13 +77,15 @@ def main():
     total_pages = len(report_data.get("quotes_per_page", {}))
     top_author = get_top_author(report_data)
     top_tag = get_top_tag(report_data)
+    top_ai_theme = get_top_ai_theme(report_data)
 
     st.subheader("📊 Overview")
-    c1, c2, c3, c4 = st.columns(4)
+    c1, c2, c3, c4, c5 = st.columns(5)
     c1.metric("Total Quotes", total_quotes)
     c2.metric("Total Pages", total_pages)
     c3.metric("Top Author", top_author)
     c4.metric("Top Tag", top_tag)
+    c5.metric("Top AI Theme", top_ai_theme)
 
     st.divider()
 
@@ -98,6 +113,32 @@ def main():
 
     st.divider()
 
+    left, right = st.columns(2)
+
+    with left:
+        st.subheader("🧠 Top AI Themes")
+        theme_data = report_data.get("top_10_ai_themes", [])
+        if theme_data:
+            theme_df = pd.DataFrame(theme_data, columns=["AI Theme", "Count"])
+            st.bar_chart(theme_df.set_index("AI Theme"))
+            st.dataframe(theme_df, use_container_width=True)
+        else:
+            st.info("No AI theme statistics found.")
+
+    with right:
+        st.subheader("😊 Sentiment Distribution")
+        sentiment_data = report_data.get("sentiment_distribution", {})
+        if sentiment_data:
+            sentiment_df = pd.DataFrame(
+                [{"Sentiment": k, "Count": v} for k, v in sentiment_data.items()]
+            )
+            st.bar_chart(sentiment_df.set_index("Sentiment"))
+            st.dataframe(sentiment_df, use_container_width=True)
+        else:
+            st.info("No sentiment statistics found.")
+
+    st.divider()
+
     st.subheader("📑 Quotes Per Page")
     page_data = report_data.get("quotes_per_page", {})
     if page_data:
@@ -114,15 +155,24 @@ def main():
     st.subheader("🔎 Search & Filter Quotes")
 
     authors = sorted(df["author"].dropna().unique().tolist()) if "author" in df.columns else []
-    selected_author = st.selectbox("Filter by Author", ["All"] + authors)
+    sentiments = sorted(df["ai_sentiment"].dropna().unique().tolist()) if "ai_sentiment" in df.columns else []
+
+    col1, col2 = st.columns(2)
+    with col1:
+        selected_author = st.selectbox("Filter by Author", ["All"] + authors)
+    with col2:
+        selected_sentiment = st.selectbox("Filter by AI Sentiment", ["All"] + sentiments)
 
     search_text = st.text_input("Search in Quote Text")
-    search_tag = st.text_input("Search in Tags")
+    search_tag = st.text_input("Search in Tags / AI Theme")
 
     filtered_df = df.copy()
 
     if selected_author != "All":
         filtered_df = filtered_df[filtered_df["author"] == selected_author]
+
+    if selected_sentiment != "All":
+        filtered_df = filtered_df[filtered_df["ai_sentiment"] == selected_sentiment]
 
     if search_text.strip():
         filtered_df = filtered_df[
@@ -132,18 +182,25 @@ def main():
     if search_tag.strip():
         filtered_df = filtered_df[
             filtered_df["tags_display"].str.contains(search_tag, case=False, na=False)
+            | filtered_df["ai_theme"].str.contains(search_tag, case=False, na=False)
         ]
 
-    display_df = filtered_df[["page", "author", "text", "tags_display"]].rename(
+    display_df = filtered_df[
+        ["page", "author", "text", "tags_display", "ai_theme", "ai_sentiment", "ai_tone", "ai_summary"]
+    ].rename(
         columns={
             "page": "Page",
             "author": "Author",
             "text": "Quote",
-            "tags_display": "Tags"
+            "tags_display": "Tags",
+            "ai_theme": "AI Theme",
+            "ai_sentiment": "AI Sentiment",
+            "ai_tone": "AI Tone",
+            "ai_summary": "AI Summary",
         }
     )
 
-    st.dataframe(display_df, use_container_width=True, height=400)
+    st.dataframe(display_df, use_container_width=True, height=500)
 
     st.divider()
 
