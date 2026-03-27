@@ -27,8 +27,6 @@ This project builds a complete data pipeline that:
 * Handles pagination dynamically
 * Extracts structured content reliably
 
----
-
 ### 📥 Structured Data Extraction
 
 Each quote contains:
@@ -38,15 +36,11 @@ Each quote contains:
 * 👤 Author
 * 🏷️ Tags
 
----
-
 ### 🧠 AI Enrichment
 
 * Automatic theme extraction (AI Theme)
 * Sentiment classification (positive / neutral / negative)
 * Tone detection (e.g. philosophical, humorous, inspirational)
-
----
 
 ### 📊 Statistical Analysis
 
@@ -57,8 +51,6 @@ Each quote contains:
 * AI theme distribution
 * Sentiment distribution
 
----
-
 ### 🔌 FastAPI Backend
 
 * RESTful API service
@@ -68,8 +60,6 @@ Endpoints:
 
 * `/quotes` → raw + enriched data
 * `/analysis` → aggregated statistics
-
----
 
 ### 🎨 Interactive Dashboard (Streamlit)
 
@@ -111,6 +101,7 @@ Endpoints:
 
 ## 📂 Project Structure
 
+```text
 AI-Browser-Agent/
 ├── app/
 │   ├── crawler/
@@ -131,22 +122,30 @@ AI-Browser-Agent/
 ├── requirements.txt
 ├── docker-compose.yml
 └── README.md
+```
+
 ---
 
 ## ▶️ Getting Started
 
 ### 1️⃣ Create virtual environment
 
+```bash
 python -m venv venv
+```
 
 ### 2️⃣ Activate
 
+```bash
 venv\Scripts\activate
+```
 
 ### 3️⃣ Install dependencies
 
+```bash
 pip install -r requirements.txt
 playwright install
+```
 
 ---
 
@@ -154,29 +153,36 @@ playwright install
 
 ### 🧠 Step 1: Crawl + Analyze + Enrich
 
+```bash
 python app/main.py
-
----
+```
 
 ### 🔌 Step 2: Start FastAPI
 
+```bash
 python -m uvicorn app.api.server:app --reload
+```
 
 Swagger UI:
-http://127.0.0.1:8000/docs
 
----
+```text
+http://127.0.0.1:8000/docs
+```
 
 ### 🎨 Step 3: Start Dashboard
 
+```bash
 streamlit run ui/dashboard.py
+```
 
 ---
 
 ## 📡 API Endpoints
 
-/quotes   → Get all enriched quotes
-/analysis → Get analysis results
+| Endpoint    | Description             |
+| ----------- | ----------------------- |
+| `/quotes`   | Get all enriched quotes |
+| `/analysis` | Get analysis results    |
 
 ---
 
@@ -184,6 +190,7 @@ streamlit run ui/dashboard.py
 
 ### 💬 Quote (Enriched)
 
+```json
 {
   "page": 1,
   "author": "Albert Einstein",
@@ -193,11 +200,11 @@ streamlit run ui/dashboard.py
   "sentiment": "neutral",
   "tone": "philosophical"
 }
-
----
+```
 
 ### 📈 Analysis
 
+```json
 {
   "total_quotes": 100,
   "top_10_authors": [["Albert Einstein", 10]],
@@ -208,6 +215,7 @@ streamlit run ui/dashboard.py
     "negative": 7
   }
 }
+```
 
 ---
 
