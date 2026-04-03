@@ -51,8 +51,9 @@ It provides:
 ---
 
 ## 🔄 Task Lifecycle
-
-<img width="220" alt="task lifecycle" src="./assets/task_lifecycle.png" />
+<p align="center">
+  <img width="200" alt="task lifecycle" src="./assets/task_lifecycle.png" />
+</p>
 
 ---
 
