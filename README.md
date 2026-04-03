@@ -1,36 +1,58 @@
 # 🤖 AI Browser Agent Workflow Platform
 
-🚀 An AI-powered async browser workflow platform for structured crawling, LLM enrichment, task lifecycle orchestration, and real-time dashboard monitoring.
+An AI-powered, task-driven browser automation workflow platform for structured crawling, semantic enrichment, task lifecycle orchestration, and real-time dashboard observability.
 
 ---
 
 ## 🌟 Overview
 
-This project evolves a traditional Playwright crawler script into a **task-driven AI workflow platform**.
+This project upgrades a traditional Playwright crawler script into a **production-style task-driven AI workflow platform prototype**.
 
-It supports:
+It provides:
 
-* 🌐 Automated multi-page browser crawling
-* ⚡ Async task lifecycle management
-* 🧠 LLM-powered semantic enrichment
-* 📊 Real-time auto-refresh dashboard
-* 🔍 Historical task querying and observability
-* 🔌 RESTful APIs with FastAPI
-* 💾 Persistent JSON-based task storage
-* 🛡️ Retry-ready fault-tolerant architecture
+* Automated multi-page browser crawling
+* Task lifecycle orchestration
+* Local / optional LLM semantic enrichment
+* Streamlit real-time dashboard
+* Historical task querying
+* RESTful APIs powered by FastAPI
+* Persistent JSON-based task storage
+* Fault-tolerant, retry-ready workflow design
 
-> 🧠 Workflow Pipeline:  
-> **Browser Crawl → Async Task Lifecycle → LLM Enrichment → Analysis Report → Auto-Refresh Dashboard**
+> Workflow Pipeline:
+> **Playwright → Task Manager → FastAPI → Streamlit Dashboard → Persistent Task Storage**
 
 ---
 
 ## 📸 System Preview
 
-<img width="1919" height="965" alt="dashboard-home" src="https://github.com/user-attachments/assets/ad217ca0-7a14-49d1-b3a5-8080469093a4" />
-<img width="1919" height="951" alt="task-running-success" src="https://github.com/user-attachments/assets/4c69b631-f527-415a-bcd9-f267d7fcc263" />
-<img width="1919" height="924" alt="enriched-result" src="https://github.com/user-attachments/assets/ec387909-defb-4700-a1f3-87df08afa77b" />
-<img width="1919" height="914" alt="analysis-report" src="https://github.com/user-attachments/assets/8ff7f053-47d5-48d6-bea2-c3522b2c5b27" />
-<img width="1919" height="954" alt="swagger-ui" src="https://github.com/user-attachments/assets/2f67dcb0-862d-42ce-8e46-7489f83c420c" />
+### 🖥️ Dashboard Overview
+
+<img width="1200" alt="dashboard overview" src="./assets/dashboard-overview.png" />
+
+### 📂 Task Detail View
+
+<img width="1200" alt="dashboard task detail" src="./assets/dashboard-task-detail.png" />
+
+### 🔌 API Overview
+
+<img width="1200" alt="swagger api overview" src="./assets/swagger-api-overview.png" />
+
+### 🚀 Run Task via Swagger
+
+<img width="1200" alt="swagger run task" src="./assets/swagger-run-task.png" />
+
+---
+
+## 🧠 System Architecture
+
+<img width="1200" alt="system architecture" src="./assets/system_architecture.png" />
+
+---
+
+## 🔄 Task Lifecycle
+
+<img width="500" alt="task lifecycle" src="./assets/task_lifecycle.png" />
 
 ---
 
@@ -38,10 +60,10 @@ It supports:
 
 ### 🌐 Browser Automation (Playwright)
 
-* Automated crawling of multi-page websites
-* Dynamic pagination support
+* Automated multi-page crawling
 * Configurable crawl depth via `pages`
 * Structured extraction of:
+
   * quote text
   * author
   * tags
@@ -49,86 +71,82 @@ It supports:
 
 ---
 
-### ⚡ Async Task Lifecycle
+### ⚡ Task Lifecycle Management
 
-Each task goes through a full lifecycle:
+Each task follows a complete lifecycle:
 
 ```text
-pending → running → success / failed
+Create Task → Pending → Running → Crawling → Analyzing → Success / Failed → Task History
 ```
 
-Features include:
+Core capabilities:
 
-* 🆔 Unique `task_id`
-* 📂 Persistent task storage
-* 📜 Historical task traceability
-* 🧠 Background execution with FastAPI
-* 🔄 Auto-refresh polling dashboard
-* 🛡️ Retry-ready fault-tolerant architecture
+* Unique `task_id`
+* Persistent task-scoped storage
+* Historical task traceability
+* Status-based dashboard filtering
+* FastAPI background execution
+* Retry-ready workflow orchestration
 
 ---
 
-### 🧠 LLM Enrichment Pipeline
+### 🧠 Semantic Enrichment Pipeline
 
-After crawling, each quote is AI-enhanced with:
+Each crawled quote can be enriched with:
 
 * `ai_theme`
 * `ai_sentiment`
 * `ai_tone`
 * `ai_summary`
 
-System-level aggregated analysis:
+Task-level aggregated analysis includes:
 
 * total quote count
 * unique authors
-* total tag statistics
-* author list summary
-* task-level report generation
+* total tags
+* author statistics
+* task summary report
 
 ---
 
 ### 📊 Real-Time Dashboard (Streamlit)
 
-#### 📋 Task Control Panel
-* configure crawl pages
-* select mode
-* create new task
-* real-time feedback
+#### 📋 Task Control
 
-#### 🔄 Auto Refresh UX
-* automatic task polling
-* no manual refresh required
-* seamless transition from `running` to `success`
-* real-time result visualization
+* Configure pages
+* Select execution mode
+* Create tasks
+* Instant status feedback
 
-#### 📂 Task History Viewer
-* task list
-* lifecycle status
-* expandable details
-* result JSON preview
-* error traceback visibility
-* analysis report visualization
+#### 📂 Task History
+
+* Task list
+* Lifecycle status
+* Expandable task detail
+* Result JSON preview
+* Timestamps
+* Report visibility
 
 ---
 
-### 🔌 FastAPI Backend APIs
+### 🔌 FastAPI APIs
 
 RESTful endpoints:
 
-* `/tasks/run` → create async task
-* `/tasks` → list task history
-* `/tasks/{task_id}` → retrieve task detail
+* `/tasks/run`
+* `/tasks`
+* `/tasks/{task_id}`
 
 Additional features:
 
-* Swagger UI docs
-* background task execution
-* lifecycle orchestration
-* API-friendly task querying
+* Swagger UI
+* Interactive testing
+* Background task execution
+* Task-level querying
 
 ---
 
-## 📊 Example Enriched Output
+## 📊 Example Output
 
 ```json
 {
@@ -144,21 +162,6 @@ Additional features:
 
 ---
 
-## 📈 Example Task Report
-
-```json
-{
-  "summary": "Successfully crawled and AI-enriched 100 quotes.",
-  "quote_count": 100,
-  "unique_authors": 50,
-  "total_tags": 232,
-  "mode": "default",
-  "pages": 3
-}
-```
-
----
-
 ## 🛠️ Tech Stack
 
 * Python
@@ -168,7 +171,6 @@ Additional features:
 * JSON persistent storage
 * Local LLM / optional API LLM
 * requests
-* Rule-based + LLM semantic analysis
 
 ---
 
@@ -178,20 +180,20 @@ Additional features:
 AI-Browser-Agent/
 ├── app/
 │   ├── crawler/
-│   │   └── quotes_spider.py
 │   ├── analyzer/
-│   │   ├── llm_analyzer.py
-│   │   └── enrich_quotes.py
 │   ├── api/
-│   │   └── server.py
 │   └── task/
-│       └── task_manager.py
 ├── ui/
 │   └── dashboard.py
 ├── data/
-│   ├── tasks/
-│   ├── quotes.json
-│   └── quotes_ai.json
+│   └── tasks/
+├── assets/
+│   ├── dashboard-overview.png
+│   ├── dashboard-task-detail.png
+│   ├── swagger-api-overview.png
+│   ├── swagger-run-task.png
+│   ├── system_architecture.png
+│   └── task_lifecycle.png
 ├── requirements.txt
 └── README.md
 ```
@@ -200,21 +202,9 @@ AI-Browser-Agent/
 
 ## ▶️ Getting Started
 
-### 1️⃣ Create virtual environment
-
 ```bash
 python -m venv venv
-```
-
-### 2️⃣ Activate
-
-```bash
 venv\Scripts\activate
-```
-
-### 3️⃣ Install dependencies
-
-```bash
 pip install -r requirements.txt
 playwright install
 ```
@@ -223,66 +213,39 @@ playwright install
 
 ## 🚀 Run the Project
 
-### 🧠 Start FastAPI Backend
+### Start FastAPI
 
 ```bash
-python -m uvicorn app.api.server:app --reload
+uvicorn app.api.server:app --reload
 ```
 
-Swagger UI:
-
-```text
-http://127.0.0.1:8000/docs
-```
-
----
-
-### 🎨 Start Streamlit Dashboard
+### Start Dashboard
 
 ```bash
 streamlit run ui/dashboard.py
-```
-
-Dashboard:
-
-```text
-http://localhost:8501
 ```
 
 ---
 
 ## 📡 API Endpoints
 
-| Endpoint | Description |
-|---|---|
-| `/tasks/run` | Create async task |
-| `/tasks` | List task history |
+| Endpoint           | Description          |
+| ------------------ | -------------------- |
+| `/tasks/run`       | Create task          |
+| `/tasks`           | List task history    |
 | `/tasks/{task_id}` | Retrieve task detail |
-
----
-
-## 📈 Workflow Example
-
-```text
-Create Task
-→ Async Background Crawl
-→ LLM Enrichment
-→ Auto Refresh Dashboard
-→ Analysis Report
-→ Historical Query
-```
 
 ---
 
 ## 🚧 Future Improvements
 
-* PostgreSQL task persistence
-* Celery / Redis distributed task queue
-* Docker one-click deployment
+* PostgreSQL persistence
+* Celery / Redis distributed queue
+* Docker deployment
 * Multi-site crawling adapters
-* Vector search + RAG retrieval layer
-* Task-level export APIs
-* Production observability metrics
+* Vector search + RAG layer
+* Task export APIs
+* Observability metrics
 
 ---
 
@@ -290,18 +253,4 @@ Create Task
 
 Catherine ✨
 
----
-
-## 💡 Notes
-
-This project demonstrates:
-
-* async workflow platform engineering
-* browser automation system design
-* FastAPI task lifecycle orchestration
-* Streamlit real-time dashboard UX
-* LLM-powered semantic enrichment
-* task persistence and observability
-* crawler → AI → backend → frontend full-stack workflow
-
-> Not just a crawler — but a **mini AI workflow platform prototype**.
+> Not just a crawler — but a **mini task-driven AI workflow platform prototype**.
