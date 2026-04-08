@@ -27,12 +27,10 @@ It provides:
 ## 📸 System Preview
 
 ### 🖥️ Dashboard Overview
+<img width="1919" height="961" alt="3bebb1a5f6d45559473bb835ba80cba8" src="https://github.com/user-attachments/assets/5e20e563-d095-4b8e-85f1-53eee11fda6b" />
 
-<img width="1200" alt="dashboard overview" src="./assets/dashboard-overview.png" />
+<img width="1915" height="954" alt="8696eecc3f0e7ebe7e703a3052333f4e" src="https://github.com/user-attachments/assets/a44a5825-17f2-4119-a40b-312d55304445" />
 
-### 📂 Task Detail View
-
-<img width="1200" alt="dashboard task detail" src="./assets/dashboard-task-detail.png" />
 
 ### 🔌 API Overview
 
