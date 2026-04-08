@@ -1,104 +1,205 @@
-import time
-import requests
+from __future__ import annotations
+
+from typing import Any
+
+import pandas as pd
 import streamlit as st
 
-API_BASE = "http://127.0.0.1:8000"
-
-st.set_page_config(page_title="AI Browser Agent Dashboard", layout="wide")
-st.title("AI Browser Agent Dashboard")
-
-if "auto_refresh" not in st.session_state:
-    st.session_state.auto_refresh = False
-
-if "last_task_id" not in st.session_state:
-    st.session_state.last_task_id = None
-
-st.markdown("### Create Task")
-
-col1, col2, col3 = st.columns([2, 2, 1])
-
-with col1:
-    mode = st.selectbox("Mode", ["default", "fast", "deep"], index=0)
-
-with col2:
-    pages = st.number_input("Pages", min_value=1, max_value=20, value=3, step=1)
-
-with col3:
-    st.write("")
-    st.write("")
-    create_btn = st.button("Run Task", use_container_width=True)
-
-if create_btn:
-    try:
-        resp = requests.post(
-            f"{API_BASE}/tasks/run",
-            json={"mode": mode, "pages": pages},
-            timeout=10,
-        )
-        data = resp.json()
-        st.success(f"Task created: {data['task_id']} | status={data['status']}")
-        st.session_state.last_task_id = data["task_id"]
-        st.session_state.auto_refresh = True
-    except Exception as e:
-        st.error(f"Create task failed: {e}")
-
-st.divider()
-
-st.markdown("### Task List")
-
-status_filter = st.selectbox(
-    "Filter by status",
-    ["all", "pending", "running", "success", "failed"],
-    index=0,
+from styles import inject_global_styles
+from components import (
+    analysis_summary_panel,
+    browser_shell_header,
+    build_demo_table,
+    build_demo_tasks,
+    earnings_chart,
+    heatmap_chart,
+    line_performance_chart,
+    metric_card,
+    render_ai_workspace_panel,
+    render_manage_projects_panel,
+    render_priority_tasks_panel,
+    side_nav,
 )
 
-manual_refresh = st.button("Refresh")
 
-try:
-    resp = requests.get(f"{API_BASE}/tasks", timeout=10)
-    tasks = resp.json().get("tasks", [])
-except Exception as e:
-    st.error(f"Load tasks failed: {e}")
-    tasks = []
+st.set_page_config(
+    page_title="AI Browser Agent Dashboard",
+    page_icon="🖥️",
+    layout="wide",
+    initial_sidebar_state="collapsed",
+)
 
-if status_filter != "all":
-    tasks = [t for t in tasks if t.get("status") == status_filter]
 
-current_task_status = None
-if st.session_state.last_task_id:
-    for t in tasks:
-        if t.get("task_id") == st.session_state.last_task_id:
-            current_task_status = t.get("status")
-            break
+def safe_get_real_data() -> dict[str, Any]:
+    data: dict[str, Any] = {
+        "metrics": {
+            "clients": "14",
+            "revenue": "$3.52",
+            "projects": "22",
+            "priority": "03",
+        },
+        "task_queue": build_demo_tasks(),
+        "table": build_demo_table(),
+    }
 
-if not tasks:
-    st.info("No tasks found.")
-else:
-    for task in tasks:
-        with st.expander(
-            f"[{task.get('status', 'unknown')}] {task.get('task_id')} | "
-            f"mode={task.get('mode')} | pages={task.get('pages')}"
-        ):
-            st.write("**Created At:**", task.get("created_at"))
-            st.write("**Updated At:**", task.get("updated_at"))
-            st.write("**Started At:**", task.get("started_at"))
-            st.write("**Finished At:**", task.get("finished_at"))
+    try:
+        from api_client import list_tasks, get_dashboard_data  # type: ignore
 
-            result = task.get("result")
-            error = task.get("error")
+        try:
+            dashboard_payload = get_dashboard_data()
+            if isinstance(dashboard_payload, dict):
+                metrics = dashboard_payload.get("metrics", {})
+                data["metrics"] = {
+                    "clients": str(metrics.get("clients", data["metrics"]["clients"])),
+                    "revenue": str(metrics.get("revenue", data["metrics"]["revenue"])),
+                    "projects": str(metrics.get("projects", data["metrics"]["projects"])),
+                    "priority": str(metrics.get("priority", data["metrics"]["priority"])),
+                }
+        except Exception:
+            pass
 
-            if result:
-                st.write("**Result:**")
-                st.json(result)
+        try:
+            tasks_payload = list_tasks()
+            if isinstance(tasks_payload, list) and tasks_payload:
+                rows: list[dict[str, Any]] = []
+                queue: list[dict[str, Any]] = []
 
-            if error:
-                st.write("**Error:**")
-                st.code(error)
+                for idx, item in enumerate(tasks_payload[:10]):
+                    task_id = item.get("task_id", f"T-{idx + 1:03d}")
+                    status = str(item.get("status", "pending"))
+                    updated = item.get("updated_at") or item.get("created_at") or "--"
+                    task_type = item.get("task_type") or item.get("mode") or "workflow"
+                    source = item.get("source") or "browser"
 
-if st.session_state.auto_refresh and current_task_status in ["pending", "running"]:
-    st.info(f"Task {st.session_state.last_task_id} is {current_task_status}... auto refreshing")
-    time.sleep(2)
-    st.rerun()
+                    rows.append(
+                        {
+                            "task_name": task_id,
+                            "task_type": task_type,
+                            "source": source,
+                            "updated_at": str(updated)[:10],
+                            "price": "$--",
+                            "status": status,
+                        }
+                    )
 
-if current_task_status in ["success", "failed"]:
-    st.session_state.auto_refresh = False
+                    queue.append(
+                        {
+                            "name": task_id,
+                            "date": str(updated)[:10],
+                            "progress": f"{idx + 1}/{len(tasks_payload)} Active",
+                            "desc": f"{task_type} / {status}",
+                        }
+                    )
+
+                if rows:
+                    data["table"] = pd.DataFrame(rows)
+                if queue:
+                    data["task_queue"] = queue[:3]
+
+                data["metrics"]["projects"] = str(len(tasks_payload))
+        except Exception:
+            pass
+
+    except Exception:
+        pass
+
+    return data
+
+
+def top_metrics(metrics: dict[str, str]) -> None:
+    c1, c2, c3, c4 = st.columns(4, gap="small")
+
+    with c1:
+        metric_card("Clients", metrics.get("clients", "14"), "Compare 10 last month", featured=True)
+    with c2:
+        metric_card("Revenue", metrics.get("revenue", "$3.52"), "$3720.00 last month")
+    with c3:
+        metric_card("Projects", metrics.get("projects", "22"), "Compare 16 last month")
+    with c4:
+        metric_card("Priority Tasks", metrics.get("priority", "03"), "Queue synced")
+
+
+def simple_panel_title(title: str, subtitle: str = "", badge: str = "") -> None:
+    if badge:
+        st.markdown(
+            f"""
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+                <div>
+                    <div class="panel-title">{title}</div>
+                    <div class="panel-subtitle">{subtitle}</div>
+                </div>
+                <div class="badge-glow">{badge}</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    else:
+        subtitle_html = f'<div class="panel-subtitle">{subtitle}</div>' if subtitle else ""
+        st.markdown(
+            f"""
+            <div style="margin-bottom:10px;">
+                <div class="panel-title">{title}</div>
+                {subtitle_html}
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+
+def main() -> None:
+    inject_global_styles()
+    payload = safe_get_real_data()
+
+    st.markdown('<div class="app-shell">', unsafe_allow_html=True)
+    browser_shell_header()
+
+    nav_col, main_col, right_col = st.columns([0.7, 6.2, 3.0], gap="small")
+
+    with nav_col:
+        side_nav()
+
+    with main_col:
+        top_metrics(payload["metrics"])
+
+        left_sub, right_sub = st.columns([1.0, 1.15], gap="small")
+
+        with left_sub:
+            simple_panel_title("Revenue Analytics")
+            analysis_summary_panel()
+
+        with right_sub:
+            simple_panel_title("Earnings Last 30 Days", badge="Live")
+            earnings_chart()
+            st.markdown(
+                """
+                <div style="display:flex;justify-content:space-between;color:#c8d3f4;font-size:13px;margin-top:-8px;margin-bottom:16px;">
+                    <div>
+                        <span style="color:#8ea0ca;">Earned</span><br>
+                        <span style="font-size:28px;font-weight:800;color:white;">$220</span>
+                    </div>
+                    <div style="text-align:right;">
+                        <span style="color:#8ea0ca;">Projected</span><br>
+                        <span style="font-size:28px;font-weight:800;color:white;">$245</span>
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+
+        render_manage_projects_panel(payload["table"])
+
+    with right_col:
+        render_priority_tasks_panel(payload["task_queue"])
+        render_ai_workspace_panel()
+
+        simple_panel_title("Orders by Time", "Execution intensity heatmap")
+        heatmap_chart()
+
+        simple_panel_title("Sales Performance", "Projected vs actual")
+        line_performance_chart()
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+
+if __name__ == "__main__":
+    main()
