@@ -137,13 +137,19 @@ Browser Source → Parser → Task Store → Analyzer → Summary → History �
 ## 🚀 Quick Start
 
 ### 1. Backend
+```bash
 uvicorn app.api.main:app --reload
+```
 
 ### 2. Dashboard
+```bash
 streamlit run ui/dashboard.py
+```
 
 ### 3. Swagger
+```bash
 http://127.0.0.1:8000/docs
+```
 
 ---
 
