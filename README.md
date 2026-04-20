@@ -1,5 +1,11 @@
 # 🚀 AI Browser Agent Workflow Platform
 
+## 🎬 Demo Video
+
+> Watch the 58s end-to-end workflow demo
+
+https://www.bilibili.com/video/BV1uYdrBMEM4
+
 A portfolio-grade **AI-powered browser workflow platform** built with **FastAPI, Playwright, and Streamlit**.
 
 This project upgrades browser automation from a one-off crawler script into a **platformized workflow system** with:
